@@ -29,4 +29,8 @@ public class PersonService {
         return personRepository.findById(id)
                 .switchIfEmpty(Mono.error(error));
     }
+
+    public Mono<Void> deleteById(String id) {
+        return findById(id).and(personRepository.deleteById(id));
+    }
 }
