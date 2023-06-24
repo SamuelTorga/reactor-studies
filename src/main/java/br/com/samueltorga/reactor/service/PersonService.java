@@ -9,6 +9,8 @@ import org.springframework.web.ErrorResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Component
 public class PersonService {
@@ -32,5 +34,9 @@ public class PersonService {
 
     public Mono<Void> deleteById(String id) {
         return findById(id).and(personRepository.deleteById(id));
+    }
+
+    public Flux<Person> createMany(List<Person> persons) {
+        return personRepository.saveAll(persons);
     }
 }

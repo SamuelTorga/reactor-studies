@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("persons")
 @Slf4j
@@ -24,8 +26,15 @@ public class PersonController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Mono<Person> createPerson(@Valid @RequestBody Person person) {
         return personService.create(person);
+    }
+
+    @PostMapping("batch")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Flux<Person> createManyPersons(@Valid @RequestBody List<Person> persons) {
+        return personService.createMany(persons);
     }
 
     @GetMapping("{id}")
