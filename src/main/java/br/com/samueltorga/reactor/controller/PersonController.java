@@ -12,6 +12,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
+
 @RestController
 @RequestMapping("persons")
 @Slf4j
@@ -22,6 +24,11 @@ public class PersonController {
 
     @GetMapping
     public Flux<Person> listAll() {
+        return personService.listAll();
+    }
+
+    @GetMapping(value = "stream", produces = TEXT_EVENT_STREAM_VALUE)
+    public Flux<Person> listAllStream() {
         return personService.listAll();
     }
 
