@@ -22,6 +22,7 @@ public class WebSecurityConfig {
                                 Mono.error(exception)
                         )
                 );
+        http.csrf(ServerHttpSecurity.CsrfSpec::disable);
         return http.build();
     }
 
