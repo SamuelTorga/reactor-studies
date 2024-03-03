@@ -3,6 +3,8 @@ package br.com.samueltorga.reactor.service;
 import br.com.samueltorga.reactor.model.Person;
 import br.com.samueltorga.reactor.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.ErrorResponseException;
@@ -25,6 +27,7 @@ public class PersonService {
         return personRepository.save(person);
     }
 
+    @Cacheable(value = "person_id", key = "#id")
     public Mono<Person> findById(String id) {
         ErrorResponseException error = new ErrorResponseException(HttpStatusCode.valueOf(404));
         error.setDetail("Person not found");
@@ -32,6 +35,7 @@ public class PersonService {
                 .switchIfEmpty(Mono.error(error));
     }
 
+    @CacheEvict(value = "person_id", key = "#id")
     public Mono<Void> deleteById(String id) {
         return findById(id).and(personRepository.deleteById(id));
     }

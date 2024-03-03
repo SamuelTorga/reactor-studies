@@ -13,8 +13,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http
-                .authorizeExchange(exchanges -> exchanges
+        http.authorizeExchange(exchanges -> exchanges
                         .anyExchange()
                         .permitAll()
                 ).exceptionHandling(exceptionHandlingSpec ->
