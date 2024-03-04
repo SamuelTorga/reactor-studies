@@ -2,6 +2,7 @@ package br.com.samueltorga.reactor.service;
 
 import br.com.samueltorga.reactor.controller.dto.PersonCreateDTO;
 import br.com.samueltorga.reactor.converter.PersonConveter;
+import br.com.samueltorga.reactor.exception.BadRequestException;
 import br.com.samueltorga.reactor.model.Person;
 import br.com.samueltorga.reactor.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +11,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.ErrorResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -30,17 +29,19 @@ public class PersonService {
         return personRepository.findAll();
     }
 
-    @CachePut(value = "person_id", key = "#person.id")
     public Mono<Person> create(PersonCreateDTO person) {
-        return personRepository.insert(PersonConveter.INSTANCE.toPersonEntity(person));
+        return create(PersonConveter.INSTANCE.toPersonEntity(person));
+    }
+
+    @CachePut(value = "person_id", key = "#person.id")
+    public Mono<Person> create(Person person) {
+        return personRepository.insert(person);
     }
 
     @Cacheable(value = "person_id", key = "#id")
     public Mono<Person> findById(String id) {
-        ErrorResponseException error = new ErrorResponseException(HttpStatusCode.valueOf(404));
-        error.setDetail("Person not found");
         return personRepository.findById(id)
-                .switchIfEmpty(Mono.error(error));
+                .switchIfEmpty(Mono.error(new BadRequestException("Person not found")));
     }
 
     @CacheEvict(value = "person_id", key = "#id")
