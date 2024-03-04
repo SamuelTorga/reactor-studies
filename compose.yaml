@@ -5,10 +5,23 @@ services:
       REDIS_ARGS: "--requirepass redis"
     ports:
       - "6379:6379"
+
+  mysql:
+    image: mysql:8.3.0
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: reactive
+      TZ: 'America/Sao_Paulo'
+    volumes:
+      - ./docker/mysql-init.sql:/docker-entrypoint-initdb.d/mysql-init.sql
+
+
   mongo:
     image: 'mongo:6'
     restart: always
-    container_name: mongodb-reactor
     ports:
       - 27017:27017
     environment:

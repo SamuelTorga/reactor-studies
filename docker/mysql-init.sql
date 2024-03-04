@@ -1,0 +1,10 @@
+CREATE TABLE products (
+    id int NOT NULL AUTO_INCREMENT,
+    name varchar(255) NOT NULL,
+    manufacturer VARCHAR(255) NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO products (name, manufacturer) VALUE ('PRODUCT 1', 'CHINA S/A');
