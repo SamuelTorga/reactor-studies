@@ -26,7 +26,7 @@ public class RedisConfig {
     @Bean
     public RedisCacheConfiguration defaultCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(120))// 2 horas
+                .entryTtl(Duration.ofHours(2))// 2 horas
                 .disableCachingNullValues()
                 .serializeValuesWith(fromSerializer(new GenericJackson2JsonRedisSerializer()));
     }

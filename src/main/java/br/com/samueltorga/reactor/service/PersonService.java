@@ -1,5 +1,7 @@
 package br.com.samueltorga.reactor.service;
 
+import br.com.samueltorga.reactor.controller.dto.PersonCreateDTO;
+import br.com.samueltorga.reactor.converter.PersonConveter;
 import br.com.samueltorga.reactor.model.Person;
 import br.com.samueltorga.reactor.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +31,8 @@ public class PersonService {
     }
 
     @CachePut(value = "person_id", key = "#person.id")
-    public Mono<Person> create(Person person) {
-        return personRepository.save(person);
+    public Mono<Person> create(PersonCreateDTO person) {
+        return personRepository.insert(PersonConveter.INSTANCE.toPersonEntity(person));
     }
 
     @Cacheable(value = "person_id", key = "#id")
@@ -48,5 +50,10 @@ public class PersonService {
 
     public Flux<Person> createMany(List<Person> persons) {
         return personRepository.saveAll(persons);
+    }
+
+    @CachePut(value = "person_id", key = "#person.id")
+    public Mono<Person> updatePerson(Person person) {
+        return personRepository.save(person);
     }
 }

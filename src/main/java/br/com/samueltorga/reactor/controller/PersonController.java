@@ -1,7 +1,15 @@
 package br.com.samueltorga.reactor.controller;
 
+import br.com.samueltorga.reactor.controller.dto.PersonCreateDTO;
+import br.com.samueltorga.reactor.exception.BadRequestException;
+import br.com.samueltorga.reactor.exception.InfraException;
 import br.com.samueltorga.reactor.model.Person;
 import br.com.samueltorga.reactor.service.PersonService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +29,7 @@ import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 public class PersonController {
 
     private final PersonService personService;
+    private final ObjectMapper objectMapper;
 
     @GetMapping
     public Flux<Person> listAll() {
@@ -34,7 +43,7 @@ public class PersonController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Person> createPerson(@Valid @RequestBody Person person) {
+    public Mono<Person> createPerson(@Valid @RequestBody PersonCreateDTO person) {
         return personService.create(person);
     }
 
@@ -53,6 +62,27 @@ public class PersonController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> deleteById(@PathVariable String id) {
         return personService.deleteById(id);
+    }
+
+    @PatchMapping(value = "{id}", consumes = {"application/json-patch+json"})
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<Person> partialUpdate(@PathVariable String id, @RequestBody JsonPatch patch) {
+        return findById(id)
+                .flatMap(person -> {
+                    try {
+                        return Mono.just(applyPatchTo(patch, person));
+                    } catch (JsonPatchException e) {
+                        return Mono.error(new BadRequestException(e));
+                    } catch (Exception e) {
+                        return Mono.error(new InfraException(e));
+                    }
+                })
+                .flatMap(personService::updatePerson);
+    }
+
+    private Person applyPatchTo(JsonPatch patch, Person person) throws JsonPatchException, JsonProcessingException {
+        JsonNode patched = patch.apply(objectMapper.convertValue(person, JsonNode.class));
+        return objectMapper.treeToValue(patched, Person.class);
     }
 
 }
