@@ -1,5 +1,6 @@
 package br.com.samueltorga.reactor.controller;
 
+import br.com.samueltorga.reactor.controller.dto.ProductCreateDTO;
 import br.com.samueltorga.reactor.exception.BadRequestException;
 import br.com.samueltorga.reactor.exception.InfraException;
 import br.com.samueltorga.reactor.model.Product;
@@ -49,6 +50,11 @@ public class ProductController {
                     }
                 })
                 .flatMap(productService::update);
+    }
+
+    @PostMapping
+    public Mono<Product> createProduct(@RequestBody ProductCreateDTO productCreateDTO) {
+        return productService.createProduct(productCreateDTO);
     }
 
     private Product applyPatchTo(JsonPatch patch, Product product) throws JsonPatchException, JsonProcessingException {

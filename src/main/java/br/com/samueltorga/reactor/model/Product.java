@@ -8,7 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 
 @Table(name = "products")
 @Data
@@ -21,8 +21,9 @@ public class Product {
     private String manufacturer;
     @ReadOnlyProperty
     @CreatedDate
-    private Instant created;
+    private ZonedDateTime created;
     @LastModifiedDate
     @ReadOnlyProperty
-    private Instant updated;
+    private ZonedDateTime updated;
+
 }
