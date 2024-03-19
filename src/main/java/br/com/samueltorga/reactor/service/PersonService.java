@@ -1,10 +1,10 @@
 package br.com.samueltorga.reactor.service;
 
 import br.com.samueltorga.reactor.controller.dto.PersonCreateDTO;
-import br.com.samueltorga.reactor.converter.PersonConveter;
+import br.com.samueltorga.reactor.converter.PersonConverter;
 import br.com.samueltorga.reactor.exception.BadRequestException;
-import br.com.samueltorga.reactor.model.Person;
-import br.com.samueltorga.reactor.repository.PersonRepository;
+import br.com.samueltorga.reactor.model.mongo.Person;
+import br.com.samueltorga.reactor.repository.mongo.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -30,7 +30,7 @@ public class PersonService {
     }
 
     public Mono<Person> create(PersonCreateDTO person) {
-        return create(PersonConveter.INSTANCE.toPersonEntity(person));
+        return create(PersonConverter.INSTANCE.toPersonEntity(person));
     }
 
     @CachePut(value = "person_id", key = "#person.id")

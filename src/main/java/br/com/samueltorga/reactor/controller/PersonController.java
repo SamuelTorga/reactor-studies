@@ -3,7 +3,7 @@ package br.com.samueltorga.reactor.controller;
 import br.com.samueltorga.reactor.controller.dto.PersonCreateDTO;
 import br.com.samueltorga.reactor.exception.BadRequestException;
 import br.com.samueltorga.reactor.exception.InfraException;
-import br.com.samueltorga.reactor.model.Person;
+import br.com.samueltorga.reactor.model.mongo.Person;
 import br.com.samueltorga.reactor.service.PersonService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

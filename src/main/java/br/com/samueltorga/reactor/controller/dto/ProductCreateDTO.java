@@ -6,6 +6,5 @@ import lombok.Data;
 public class ProductCreateDTO {
 
     private String name;
-    private String manufacturer;
 
 }

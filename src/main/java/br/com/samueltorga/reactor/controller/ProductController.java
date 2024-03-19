@@ -3,7 +3,7 @@ package br.com.samueltorga.reactor.controller;
 import br.com.samueltorga.reactor.controller.dto.ProductCreateDTO;
 import br.com.samueltorga.reactor.exception.BadRequestException;
 import br.com.samueltorga.reactor.exception.InfraException;
-import br.com.samueltorga.reactor.model.Product;
+import br.com.samueltorga.reactor.model.r2dbc.Product;
 import br.com.samueltorga.reactor.service.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
+import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
+
 @RestController
 @RequestMapping("products")
 @Slf4j
@@ -28,6 +32,21 @@ public class ProductController {
 
     @GetMapping
     public Flux<Product> listAll() {
+        return productService.listAll();
+    }
+
+    @GetMapping("manufacturers")
+    public Flux<Product> listAllByManufacturer() {
+        return productService.listAllWithManufacturer();
+    }
+
+    @GetMapping("manufacturers/{manufacturerId}")
+    public Flux<Product> listAllByManufacturer(@PathVariable Integer manufacturerId) {
+        return productService.listAllWithManufacturer(manufacturerId);
+    }
+
+    @GetMapping(value = "stream", produces = TEXT_EVENT_STREAM_VALUE)
+    public Flux<Product> listAllStream() {
         return productService.listAll();
     }
 
@@ -55,6 +74,11 @@ public class ProductController {
     @PostMapping
     public Mono<Product> createProduct(@RequestBody ProductCreateDTO productCreateDTO) {
         return productService.createProduct(productCreateDTO);
+    }
+
+    @PostMapping("/batch")
+    public Flux<Product> createManyProduct(@RequestBody List<ProductCreateDTO> products) {
+        return productService.createProduct(products);
     }
 
     private Product applyPatchTo(JsonPatch patch, Product product) throws JsonPatchException, JsonProcessingException {

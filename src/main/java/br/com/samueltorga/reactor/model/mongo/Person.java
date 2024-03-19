@@ -1,4 +1,4 @@
-package br.com.samueltorga.reactor.model;
+package br.com.samueltorga.reactor.model.mongo;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
