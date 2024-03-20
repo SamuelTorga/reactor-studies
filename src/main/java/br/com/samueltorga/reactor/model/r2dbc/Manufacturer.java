@@ -13,7 +13,6 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.ZonedDateTime;
 
-
 @Table(name = "manufacturers")
 @Data
 @NoArgsConstructor

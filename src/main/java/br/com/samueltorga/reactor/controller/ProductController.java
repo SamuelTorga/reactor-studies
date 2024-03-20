@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class ProductController {
     }
 
     @GetMapping("manufacturers/{manufacturerId}")
-    public Flux<Product> listAllByManufacturer(@PathVariable Integer manufacturerId) {
+    public Flux<Product> listAllByManufacturer(@PathVariable @NotNull Integer manufacturerId) {
         return productService.listAllWithManufacturer(manufacturerId);
     }
 
