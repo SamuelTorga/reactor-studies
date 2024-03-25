@@ -21,10 +21,10 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class RabbitMQConfig {
 
-    @Value("${TOPIC_EXCHANGE_NAME}")
+    @Value("${AMQP_TOPIC_EXCHANGE_NAME}")
     private String topicExchangeName;
 
-    @Value("${QUEUE_NAME}")
+    @Value("${AMQP_QUEUE_NAME}")
     private String queueName;
 
     @Bean
